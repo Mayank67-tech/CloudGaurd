@@ -1,0 +1,83 @@
+{
+  "title": "CloudGuard Posture Monitor",
+  "panels": [
+    {
+      "id": 1,
+      "type": "gauge",
+      "title": "Posture Score",
+      "gridPos": { "h": 9, "w": 8, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "aws_security_posture_score",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 60 },
+              { "color": "green", "value": 80 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Findings By Severity Over Time",
+      "gridPos": { "h": 9, "w": 16, "x": 8, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(aws_critical_findings_total)",
+          "legendFormat": "Critical",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(aws_high_findings_total)",
+          "legendFormat": "High",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "bargauge",
+      "title": "Findings by Service",
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 9 },
+      "targets": [
+        {
+          "expr": "sum(aws_critical_findings_total) by (service) + sum(aws_high_findings_total) by (service) or sum(aws_critical_findings_total) by (service) or sum(aws_high_findings_total) by (service)",
+          "legendFormat": "{{service}}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient"
+      }
+    },
+    {
+      "id": 4,
+      "type": "table",
+      "title": "Alert History (Critical & High)",
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 18 },
+      "targets": [
+        {
+          "expr": "aws_critical_findings_total > 0 or aws_high_findings_total > 0",
+          "legendFormat": "{{service}} - Findings",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 38,
+  "refresh": "1m"
+}
