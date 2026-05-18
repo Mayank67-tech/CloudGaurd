@@ -38,11 +38,8 @@ services:
   scanner:
     build: .
     container_name: cloudguard_scanner
+    env_file: .env
     environment:
-      # Optional: Pass AWS credentials via env vars if not using an IAM instance role
-      # - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      # - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      # - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
       - PUSHGATEWAY_URL=http://pushgateway:9091
     depends_on:
       - pushgateway
